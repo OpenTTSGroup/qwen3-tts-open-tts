@@ -1,0 +1,24 @@
+services:
+  qwen3-tts:
+    image: ghcr.io/openttsgroup/qwen3-tts-open-tts:latest
+    container_name: qwen3-tts-open-tts
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./voices:/voices:ro
+      - ./cache:/root/.cache
+    environment:
+      QWEN3_VARIANT: "base"
+      # QWEN3_MODEL: "Qwen/Qwen3-TTS-12Hz-1.7B-Base"
+      # QWEN3_DEVICE: "auto"
+      # QWEN3_DTYPE: "bfloat16"
+      # QWEN3_ATTN_IMPL: "flash_attention_2"
+      LOG_LEVEL: "info"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
